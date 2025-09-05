@@ -1,0 +1,24 @@
+{% extends "inventory/base.html" %}
+{% block content %}
+<h2>Categories</h2>
+
+<div class="alert alert-info">
+    <div class="row align-items-center">
+      <div class="col-auto">
+        <a href="{% url 'category_create' %}" class="btn btn-primary">Add Category</a>
+      </div>
+      <div class="col-auto ms-auto me-3">
+        <input type="text" id="search-box" class="form-control" 
+               placeholder="Search category..." value="{{ search_query }}">
+      </div>
+    </div>
+  </div>
+  
+
+<!-- Table will load here -->
+<div id="category-table">
+    {% include "inventory/category_table.html" %}
+</div>
+
+
+{% endblock %}

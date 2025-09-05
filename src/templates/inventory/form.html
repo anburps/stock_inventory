@@ -1,0 +1,13 @@
+{% extends "inventory/base.html" %}
+{% block content %}
+<div class="card shadow">
+  <div class="card-body">
+    <h3 class="card-title">Form</h3>
+    <form method="post">{% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-success">Save</button>
+      <a href="javascript:history.back()" class="btn btn-secondary">Cancel</a>
+    </form>
+  </div>
+</div>
+{% endblock %}
