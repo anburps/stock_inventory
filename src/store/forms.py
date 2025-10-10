@@ -1,5 +1,5 @@
 from django import forms
-from .models import Category, Supplier, Product, StockTransaction
+from .models import *
 
 # ----------------- FORMS -----------------
 class CategoryForm(forms.ModelForm):
@@ -15,10 +15,28 @@ class SupplierForm(forms.ModelForm):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ["name", "sku", "category", "supplier", "pending_price", 
-                  "quantity", "original_price", "discount_price", "reorder_level"]
+        fields = ["user","name", "sku", "category", "supplier", 
+                  "quantity", "original_price", "discount_price"]
 
 class StockTransactionForm(forms.ModelForm):
     class Meta:
         model = StockTransaction
         fields = ["product", "transaction_type", "quantity", "note"]
+
+class BillForm(forms.ModelForm):
+    class Meta:
+        model = Bill
+        fields = "__all__"
+
+class BillItemForm(forms.ModelForm):
+    class Meta:
+        model = BillItem
+        fields = "__all__"
+
+class PaymentForm(forms.ModelForm):
+    class Meta:
+        model = Payment
+        fields = "__all__"
+    
+    
+    

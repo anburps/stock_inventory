@@ -1,7 +1,7 @@
 {% extends "inventory/base.html" %}
 {% block content %}
 <h2>Stock Transactions</h2>
-<a href="{% url 'transaction_create' %}" class="btn btn-primary mb-2">Add Transaction</a>
+{% comment %} <a href="{% url 'transaction_create' %}" class="btn btn-primary mb-2">Add Transaction</a> {% endcomment %}
 <table class="table table-striped">
   <thead>
     <tr><th>Product</th><th>Type</th><th>Quantity</th><th>Date</th></tr>

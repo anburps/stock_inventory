@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Category, Supplier, Product, StockTransaction
-from .forms import CategoryForm, SupplierForm, ProductForm, StockTransactionForm
+from .models import *
+from .forms import CategoryForm, SupplierForm, ProductForm, StockTransactionForm, BillForm, BillItemForm, PaymentForm
 from django.db.models import Sum
 from django.core.paginator import Paginator
 from django.http import JsonResponse
@@ -164,4 +164,92 @@ def transaction_create(request):
             return redirect("transaction_list")
     else:
         form = StockTransactionForm()
+    return render(request, "inventory/form.html", {"form": form})
+
+
+def bill_create(request):
+    if request.method == "POST":
+        form = BillForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("bill_list")
+    else:
+        form = BillForm()
+    return render(request, "inventory/form.html", {"form": form})
+
+def bill_list(request):
+    bills = Bill.objects.all()
+    return render(request, "inventory/bill_list.html", {"bills": bills})
+
+def bill_details(request, pk):
+    bill = get_object_or_404(Bill, pk=pk)
+    return render(request, "inventory/bill_details.html", {"bill": bill})
+
+def bill_update(request, pk):
+    bill = get_object_or_404(Bill, pk=pk)
+    if request.method == "POST":
+        form = BillForm(request.POST, instance=bill)
+        if form.is_valid():
+            form.save()
+            return redirect("bill_list")
+    else:
+        form = BillForm(instance=bill)
+    return render(request, "inventory/form.html", {"form": form})
+
+def billitem_create(request):
+    if request.method == "POST":
+        form = BillItemForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("bill_list")
+    else:
+        form = BillItemForm()
+    return render(request, "inventory/form.html", {"form": form})
+
+def billitem_list(request):
+    billitems = BillItem.objects.all()
+    return render(request, "inventory/billitem_list.html", {"billitems": billitems})
+    
+def billitem_detail(request, pk):
+    bill = get_object_or_404(BillItem, pk=pk)
+    return render(request, "inventory/billitem_detail.html", {"bill": bill})
+
+def billitem_update(request, pk):
+    billitem = get_object_or_404(BillItem, pk=pk)
+    if request.method == "POST":
+        form = BillItemForm(request.POST, instance=billitem)
+        if form.is_valid():
+            form.save()
+            return redirect("bill_list")
+    else:
+        form = BillItemForm(instance=billitem)
+    return render(request, "inventory/form.html", {"form": form})
+
+def payment_create(request):
+    if request.method == "POST":
+        form = PaymentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("bill_list")
+    else:
+        form = PaymentForm()
+    return render(request, "inventory/form.html", {"form": form})
+
+def payment_list(request):
+    payments = Payment.objects.all()
+    return render(request, "inventory/payment_list.html", {"payments": payments})
+
+def payment_detail(request, pk):
+    payment = get_object_or_404(Payment, pk=pk)
+    return render(request, "inventory/payment_detail.html", {"payment": payment})
+    
+def payment_update(request, pk):
+    payment = get_object_or_404(Payment, pk=pk)
+    if request.method == "POST":
+        form = PaymentForm(request.POST, instance=payment)
+        if form.is_valid():
+            form.save()
+            return redirect("bill_list")
+    else:
+        form = PaymentForm(instance=payment)
     return render(request, "inventory/form.html", {"form": form})

@@ -1,0 +1,13 @@
+{% extends "inventory/base.html" %}
+{% block content %}
+<h2>{{ product.name }} ({{ product.sku }})</h2>
+<ul class="list-group">
+  <li class="list-group-item"><b>Category:</b> {{ product.category }}</li>
+  <li class="list-group-item"><b>Supplier:</b> {{ product.supplier }}</li>
+  <li class="list-group-item"><b>Quantity:</b> {{ product.quantity }}</li>
+  <li class="list-group-item"><b>Original Price:</b> {{ product.original_price }}</li>
+  <li class="list-group-item"><b>Discount Price:</b> {{ product.discount_price }}</li>
+</ul>
+<a href="{% url 'product_update' product.pk %}" class="btn btn-warning mt-3">Edit</a>
+<a href="{% url 'product_delete' product.pk %}" class="btn btn-danger mt-3">Delete</a>
+{% endblock %}

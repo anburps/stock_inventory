@@ -1,0 +1,28 @@
+{% extends "inventory/base.html" %}
+{% block content %}
+<h2>Billitem</h2>
+<a href="{% url 'billitem_create' %}" class="btn btn-primary mb-2">Add Billitem</a>
+<table class="table table-striped">
+  <thead>
+    <tr><th>S.No</th><th>Bill</th><th>Product</th><th>Quantity</th><th>Price</th><th>Created At</th><th>Action</tr>
+  </thead>
+  <tbody>
+    {% for billitem in billitems %}
+    <tr>
+      <td><a href="{% url 'billitem_detail' billitem.pk %}">{{ forloop.counter }}</a></td>
+      <td>{{ billitem.bill }}</td>
+      <td>{{ billitem.product }}</td>
+      <td>{{ billitem.quantity }}</td>
+      <td>{{ billitem.price }}</td>
+      <td>{{ billitem.created_at|date:"Y-m-d H:i" }}</td>
+      <td>
+        <a href="{% url 'billitem_update' billitem.pk %}" class="btn btn-sm btn-warning">Edit</a>
+        {% comment %} <a href="{% url 'billitem_delete' billitem.pk %}" class="btn btn-sm btn-danger">Delete</a> {% endcomment %}
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="6">No billitems found</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

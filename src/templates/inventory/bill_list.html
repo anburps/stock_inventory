@@ -1,0 +1,28 @@
+{% extends "inventory/base.html" %}
+{% block content %}
+<h2>Bill</h2>
+<a href="{% url 'bill_create' %}" class="btn btn-primary mb-2">Add Bill</a>
+<table class="table table-striped">
+  <thead>
+    <tr><th>S.No</th><th>User</th><th>Customer</th><th>Purchase Total</th><th>Payment Total</th><th>Created At</th><th>Action</th></tr>
+  </thead>
+  <tbody>
+    {% for bill in bills %}
+    <tr>
+      <td><a href="{% url 'bill_detail' bill.pk %}">{{ forloop.counter }}</a></td>
+      <td>{{ bill.user }}</td>
+      <td>{{ bill.customer }}</td>
+      <td>{{ bill.purchase_total }}</td>
+      <td>{{ bill.paid_total }}</td>
+      <td>{{ bill.created_at|date:"Y-m-d H:i" }}</td>
+      <td>
+        <a href="{% url 'bill_update' bill.pk %}" class="btn btn-sm btn-warning">Edit</a>
+        {% comment %} <a href="{% url 'bill_delete' bill.pk %}" class="btn btn-sm btn-danger">Delete</a> {% endcomment %}
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="6">No bills found</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
