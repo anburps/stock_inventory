@@ -1,9 +1,12 @@
 from django.urls import path
 from . import views
-
-
+from accounts import views as account
 urlpatterns = [
-    path("", views.index, name="index"),
+    path("", account.register_view, name="register"),
+    path("login/", account.login_view, name="login"),
+    path("logout/", account.logout_view, name="logout"),
+    
+    path("index/", views.index, name="index"),
     # Category
     path("categories/", views.category_list, name="category_list"),
     path("categories/create/", views.category_create, name="category_create"),

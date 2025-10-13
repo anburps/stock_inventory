@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-87s(q9$tr%^i*3s5zjk&$*c)^(o7th*9a9gwddc@$1bf&yam85
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'store'
+    'store',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -51,6 +52,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'stock.urls'
+AUTH_USER_MODEL = 'accounts.User'
+
 
 TEMPLATES = [
     {
@@ -132,3 +135,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/login'
+
+
+AUTHENDICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    
+]

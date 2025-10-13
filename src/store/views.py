@@ -5,6 +5,7 @@ from django.db.models import Sum
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.template.loader import render_to_string
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 
@@ -36,7 +37,7 @@ def category_list(request):
         categories = categories.filter(category_name__icontains=search_query)
 
     # Pagination
-    paginator = Paginator(categories, 2)
+    paginator = Paginator(categories, 4)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -47,10 +48,14 @@ def category_list(request):
 
     return render(request, "inventory/category_list.html", {"categories": page_obj, "search_query": search_query})
 
+@login_required
 def category_create(request):
+    user = request.user
     if request.method == "POST":
         form = CategoryForm(request.POST)
         if form.is_valid():
+            form = form.save(commit=False)
+            form.user = user
             form.save()
             return redirect("category_list")
     else:
