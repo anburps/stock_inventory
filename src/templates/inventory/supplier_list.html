@@ -4,11 +4,12 @@
 <a href="{% url 'supplier_create' %}" class="btn btn-primary mb-2">Add Supplier</a>
 <table class="table table-striped">
   <thead>
-    <tr><th>Name</th><th>Contact</th><th>Email</th><th>Actions</th></tr>
+    <tr><th>S.No</th><th>Name</th><th>Contact</th><th>Email</th><th>Actions</th></tr>
   </thead>
   <tbody>
     {% for supplier in suppliers %}
     <tr>
+      <td>{{ forloop.counter}}</td>
       <td>{{ supplier.name }}</td>
       <td>{{ supplier.contact }}</td>
       <td>{{ supplier.email }}</td>

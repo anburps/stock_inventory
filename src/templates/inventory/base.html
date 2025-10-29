@@ -52,6 +52,7 @@
     <a href="{% url 'bill_list' %}">💸 Bills</a>
     <a href="{% url 'billitem_list' %}">BillItem</a>
     <a href="{% url 'payment_list' %}">payment</a>
+    <a href="{% url 'logout' %}">logout</a>
 
   </div>
 
@@ -62,7 +63,7 @@
     <p>Select a menu from the left.</p>
     {% endblock %}
   </div>
-
+{% comment %} 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
   $(document).ready(function(){
@@ -91,9 +92,9 @@
           });
       });
   });
-  </script>
+  </script> {% endcomment %}
 
-  <!-- Pagination -->
+  {% comment %} <!-- Pagination -->
   <nav aria-label="Page navigation">
     <ul class="pagination">
       {% if categories.has_previous %}
@@ -118,6 +119,6 @@
         </li>
       {% endif %}
     </ul>
-  </nav>
+  </nav> {% endcomment %}
 </body>
 </html>

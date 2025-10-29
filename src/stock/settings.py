@@ -9,11 +9,18 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+import os
 from pathlib import Path
+import environ
+from os.path import dirname, join
+import socket
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+env = environ.Env()
+environ.Env.read_env()
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE = dirname(BASE_DIR)
+env = environ.Env()
 
 
 # Quick-start development settings - unsuitable for production
@@ -85,12 +92,12 @@ WSGI_APPLICATION = 'stock.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'stock',      # your database name
-        'USER': 'acharya_admin',          # your DB user
-        'PASSWORD': 'Anbu',    # your DB password
-        'HOST': 'localhost',           # or '127.0.0.1'
-        'PORT': '5432',                # default Postgres port
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_SERVER'),
+        'PORT': '',
     }
 }
 
@@ -138,6 +145,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login'
+LOGIN_URL = '/login/'
 
 
 AUTHENDICATION_BACKENDS = [

@@ -60,7 +60,7 @@ def category_create(request):
             return redirect("category_list")
     else:
         form = CategoryForm()
-    return render(request, "inventory/form.html", {"form": form})
+    return render(request, "inventory/category_create.html", {"form": form})
 
 def category_update(request, pk):
     category = get_object_or_404(Category, pk=pk)
@@ -71,7 +71,7 @@ def category_update(request, pk):
             return redirect("category_list")
     else:
         form = CategoryForm(instance=category)
-    return render(request, "inventory/form.html", {"form": form})
+    return render(request, "inventory/category_edit.html", {"form": form})
 
 def category_delete(request, pk):
     category = get_object_or_404(Category, pk=pk)
@@ -93,7 +93,7 @@ def supplier_create(request):
             return redirect("supplier_list")
     else:
         form = SupplierForm()
-    return render(request, "inventory/form.html", {"form": form})
+    return render(request, "inventory/supplier_create.html", {"form": form})
 
 def supplier_update(request, pk):
     supplier = get_object_or_404(Supplier, pk=pk)

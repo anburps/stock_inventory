@@ -1,0 +1,48 @@
+{% extends "inventory/base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div class="card p-5 shadow-lg rounded-4" style="width: 500px;">
+        <h3 class="text-center mb-4 text-primary fw-bold">Create Supplier</h3>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="id_name" class="form-label fw-semibold"> Name</label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                    <div class="text-danger small mt-1">{{ form.name.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_contact" class="form-label fw-semibold">Contact</label>
+                {{ form.contact }}
+                {% if form.contact.errors %}
+                    <div class="text-danger small mt-1">{{ form.contact.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_email" class="form-label fw-semibold"> Email</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_address" class="form-label fw-semibold">Address</label>
+                {{ form.address }}
+                {% if form.address.errors %}
+                    <div class="text-danger small mt-1">{{ form.address.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 rounded-pill py-2">Create</button>
+            <a href="{% url 'supplier_list' %}" class="btn btn-outline-secondary w-100 rounded-pill mt-2 py-2">Back to List</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
