@@ -2,8 +2,8 @@ from django.urls import path
 from . import views
 from accounts import views as account
 urlpatterns = [
-    path("", account.register_view, name="register"),
-    path("login/", account.login_view, name="login"),
+    path("register/", account.register_view, name="register"),
+    path("", account.login_view, name="login"),
     path("logout/", account.logout_view, name="logout"),
     
     path("index/", views.index, name="index"),
@@ -32,18 +32,18 @@ urlpatterns = [
     
     # Bill
     path("bills-list/", views.bill_list, name="bill_list"),
-    path("bills-create/", views.bill_create, name="bill_create"),
-    path("bill-detail/<int:pk>/", views.bill_details, name="bill_detail"),
+    path("bills-create/", views.create_bill, name="bill_create"),
+    path("bill-detail/<int:pk>/", views.bill_detail, name="bill_detail"),
     path("bills/<int:pk>/update/", views.bill_update, name="bill_update"),
     
     # BillItem
-    path("billitems/create/", views.billitem_create, name="billitem_create"),
+    # path("billitems/create/", views.billitem_create, name="billitem_create"),
     path("billitems/list/", views.billitem_list, name="billitem_list"),
     path("billitems/<int:pk>/detail/", views.billitem_detail, name="billitem_detail"),
     path("billitems/<int:pk>/update/", views.billitem_update, name="billitem_update"),
     
     # Payments
-    path("payments_create/", views.payment_create, name="payment_create"),
+    path("payments_create/<int:id>/", views.create_payment, name="payment_create"),
     path("payments_list/", views.payment_list, name="payment_list"),
     path("payments/<int:pk>/detail/", views.payment_detail, name="payment_detail"),
     path("payments/<int:pk>/update/", views.payment_update, name="payment_update"),

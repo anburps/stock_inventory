@@ -1,5 +1,6 @@
 from django import forms
 from .models import *
+from django.forms import inlineformset_factory
 
 # ----------------- FORMS -----------------
 class CategoryForm(forms.ModelForm):
@@ -27,7 +28,7 @@ class SupplierForm(forms.ModelForm):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ["user","name", "sku", "category", "supplier", 
+        fields = ["name", "sku", "category", "supplier", 
                   "quantity", "original_price", "discount_price"]
     
     wedgets = {
@@ -52,35 +53,29 @@ class StockTransactionForm(forms.ModelForm):
         "note": forms.Textarea(attrs={"class": "form-control", "placeholder": "Transaction Note", "required": "required"}),
     }
 
+
 class BillForm(forms.ModelForm):
     class Meta:
         model = Bill
-        fields = "__all__"
-    
-    wedgets = {
-        "supplier": forms.Select(attrs={"class": "form-control", "required": "required"}),
-        "note": forms.Textarea(attrs={"class": "form-control", "placeholder": "Transaction Note", "required": "required"}),
-    }
+        fields = ['customer']  # Add other fields if you need (like 'user')
+
 
 class BillItemForm(forms.ModelForm):
     class Meta:
         model = BillItem
-        fields = "__all__"
-    
-    wedgets = {
-        "product": forms.Select(attrs={"class": "form-control", "required": "required"}),
-        "quantity": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Transaction Quantity", "required": "required"}),
-    }
+        fields = ['product', 'quantity', 'price']
+
+
+# Inline formset for Bill items
+BillItemFormSet = inlineformset_factory(
+    Bill, BillItem,
+    form=BillItemForm,
+    extra=1,
+    can_delete=True
+)
+
 
 class PaymentForm(forms.ModelForm):
     class Meta:
         model = Payment
-        fields = "__all__"
-    
-    wedgets = {
-        "supplier": forms.Select(attrs={"class": "form-control", "required": "required"}),
-        "note": forms.Textarea(attrs={"class": "form-control", "placeholder": "Transaction Note", "required": "required"}),
-    }
-    
-    
-    
+        fields = ['bill', 'amount']

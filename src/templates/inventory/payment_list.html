@@ -1,7 +1,7 @@
 {% extends "inventory/base.html" %}
 {% block content %}
 <h2>Payment</h2>
-<a href="{% url 'payment_create' %}" class="btn btn-primary mb-2">Add Payment</a>
+{% comment %} <a href="{% url 'payment_create' %}" class="btn btn-primary mb-2">Add Payment</a> {% endcomment %}
 <table class="table table-striped">
   <thead>
     <tr><th>S.No</th><th>Bill</th><th>Amount</th><th>Created At</th><th>Action</tr>

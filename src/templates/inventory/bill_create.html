@@ -1,0 +1,21 @@
+{% extends "inventory/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>Create Bill</h2>
+  <form method="POST">
+    {% csrf_token %}
+    {{ bill_form.as_p }}
+
+    <h4>Bill Items</h4>
+    {{ formset.management_form }}
+    {% for form in formset %}
+      <div class="border p-3 mb-2 rounded">
+        {{ form.as_p }}
+      </div>
+    {% endfor %}
+
+    <button type="submit" class="btn btn-primary">Create Bill</button>
+  </form>
+</div>
+{% endblock %}

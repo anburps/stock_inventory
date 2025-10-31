@@ -17,6 +17,8 @@
       <td>{{ bill.created_at|date:"Y-m-d H:i" }}</td>
       <td>
         <a href="{% url 'bill_update' bill.pk %}" class="btn btn-sm btn-warning">Edit</a>
+        <a href="{% url 'bill_detail' bill.pk %}" class="btn btn-sm btn-warning">payment</a>
+
         {% comment %} <a href="{% url 'bill_delete' bill.pk %}" class="btn btn-sm btn-danger">Delete</a> {% endcomment %}
       </td>
     </tr>

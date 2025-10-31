@@ -1,0 +1,74 @@
+{% extends "inventory/base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div class="card p-5 shadow-lg rounded-4" style="width: 500px;">
+        <h3 class="text-center mb-4 text-primary fw-bold">Create Product</h3>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div >
+                <div class="mb-3">
+                    <label for="id_name" class="form-label fw-semibold"> Name</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                        <div class="text-danger small mt-1">{{ form.name.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_category" class="form-label fw-semibold">Category</label>
+                    {{ form.category }}
+                    {% if form.category.errors %}
+                        <div class="text-danger small mt-1">{{ form.category.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_supplier" class="form-label fw-semibold"> Supplier</label>
+                    {{ form.supplier }}
+                    {% if form.supplier.errors %}
+                        <div class="text-danger small mt-1">{{ form.supplier.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_sku" class="form-label fw-semibold">SKU Code</label>
+                    {{ form.sku }}
+                    {% if form.sku.errors %}
+                        <div class="text-danger small mt-1">{{ form.sku.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            <div>
+                <div class="mb-3">
+                    <label for="id_quantity" class="form-label fw-semibold">Quantity</label>
+                    {{ form.quantity }}
+                    {% if form.quantity.errors %}
+                        <div class="text-danger small mt-1">{{ form.quantity.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_original_price" class="form-label fw-semibold"> Original Price</label>
+                    {{ form.original_price }}
+                    {% if form.original_price.errors %}
+                        <div class="text-danger small mt-1">{{ form.original_price.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_discount_price" class="form-label fw-semibold">Discount Price</label>
+                    {{ form.discount_price }}
+                    {% if form.discount_price.errors %}
+                        <div class="text-danger small mt-1">{{ form.discount_price.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 rounded-pill py-2">Create</button>
+            <a href="{% url 'product_list' %}" class="btn btn-outline-secondary w-100 rounded-pill mt-2 py-2">Back to List</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

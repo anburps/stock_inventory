@@ -1,13 +1,42 @@
 {% extends "inventory/base.html" %}
+
 {% block content %}
-<h2>{{ product.name }} ({{ product.sku }})</h2>
-<ul class="list-group">
-  <li class="list-group-item"><b>Category:</b> {{ product.category }}</li>
-  <li class="list-group-item"><b>Supplier:</b> {{ product.supplier }}</li>
-  <li class="list-group-item"><b>Quantity:</b> {{ product.quantity }}</li>
-  <li class="list-group-item"><b>Original Price:</b> {{ product.original_price }}</li>
-  <li class="list-group-item"><b>Discount Price:</b> {{ product.discount_price }}</li>
-</ul>
-<a href="{% url 'product_update' product.pk %}" class="btn btn-warning mt-3">Edit</a>
-<a href="{% url 'product_delete' product.pk %}" class="btn btn-danger mt-3">Delete</a>
+<div class="container mt-5">
+  <h2>Bill #{{ bill.id }} - {{ bill.customer }}</h2>
+
+  <p><strong>Total:</strong> ₹{{ bill.purchase_total }}</p>
+  <p><strong>Paid:</strong> ₹{{ bill.paid_total }}</p>
+  <p><strong>Balance Due:</strong> ₹{{ bill.balance_due }}</p>
+
+  <h4>Items</h4>
+  <table class="table">
+    <thead><tr><th>Product</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <td>{{ item.product.name }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.price }}</td>
+        <td>{{ item.total_price }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h4>Payments</h4>
+  <table class="table">
+    <thead><tr><th>Amount</th><th>Date</th></tr></thead>
+    <tbody>
+      {% for payment in payments %}
+      <tr>
+        <td>{{ payment.amount }}</td>
+        <td>{{ payment.created_at }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if bill.balance_due != 0%}
+    <a href="{% url 'payment_create' bill.pk %}" class="btn btn-success">Add Payment</a>
+  {% endif %}
+</div>
 {% endblock %}

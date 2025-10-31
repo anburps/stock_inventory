@@ -1,11 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
-from .forms import CategoryForm, SupplierForm, ProductForm, StockTransactionForm, BillForm, BillItemForm, PaymentForm
+from .forms import  *
 from django.db.models import Sum
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 # Create your views here.
 
 
@@ -85,11 +86,16 @@ def supplier_list(request):
     suppliers = Supplier.objects.all()
     return render(request, "inventory/supplier_list.html", {"suppliers": suppliers})
 
+@login_required
 def supplier_create(request):
+    user = request.user
     if request.method == "POST":
         form = SupplierForm(request.POST)
         if form.is_valid():
-            form.save()
+            data=form.save(commit=False)
+            data.user = user
+            data.save()
+            
             return redirect("supplier_list")
     else:
         form = SupplierForm()
@@ -122,15 +128,19 @@ def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
     return render(request, "inventory/product_detail.html", {"product": product})
 
+@login_required
 def product_create(request):
+    user = request.user
     if request.method == "POST":
         form = ProductForm(request.POST)
         if form.is_valid():
-            form.save()
+            data=form.save(commit=False)
+            data.user = user
+            data.save()
             return redirect("product_list")
     else:
         form = ProductForm()
-    return render(request, "inventory/form.html", {"form": form})
+    return render(request, "inventory/product_create.html", {"form": form})
 
 def product_update(request, pk):
     product = get_object_or_404(Product, pk=pk)
@@ -155,11 +165,14 @@ def transaction_list(request):
     transactions = StockTransaction.objects.select_related("product").all()
     return render(request, "inventory/transaction_list.html", {"transactions": transactions})
 
+@login_required
 def transaction_create(request):
+    user = request.user
     if request.method == "POST":
         form = StockTransactionForm(request.POST)
         if form.is_valid():
-            transaction = form.save()
+            transaction = form.save(commit=False)
+            transaction.user = user
             # Auto-update product stock
             if transaction.transaction_type == StockTransaction.IN:
                 transaction.product.quantity += transaction.quantity
@@ -171,24 +184,75 @@ def transaction_create(request):
         form = StockTransactionForm()
     return render(request, "inventory/form.html", {"form": form})
 
+# ✅ Create Bill with multiple BillItems
+def create_bill(request):
+    if request.method == 'POST':
+        bill_form = BillForm(request.POST)
+        formset = BillItemFormSet(request.POST)
 
-def bill_create(request):
-    if request.method == "POST":
-        form = BillForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("bill_list")
+        if bill_form.is_valid() and formset.is_valid():
+            bill = bill_form.save(commit=False)
+            bill.user = request.user
+            bill.save()
+
+            items = formset.save(commit=False)
+            for item in items:
+                item.bill = bill
+                item.save()
+            formset.save_m2m()
+
+            bill.calculate_purchase_total()
+            messages.success(request, "Bill created successfully.")
+            return redirect('bill_detail', bill.id)
     else:
-        form = BillForm()
-    return render(request, "inventory/form.html", {"form": form})
+        bill_form = BillForm()
+        formset = BillItemFormSet()
+
+    context = {
+        'bill_form': bill_form,
+        'formset': formset,
+    }
+    return render(request, 'inventory/bill_create.html', context)
+
+
+# ✅ View to create Payment for a Bill
+def create_payment(request, id):
+    bill = get_object_or_404(Bill, id=id)
+
+    if request.method == 'POST':
+        form = PaymentForm(request.POST)
+        if form.is_valid():
+            payment = form.save(commit=False)
+            payment.bill = bill
+            payment.save()
+            bill.calculate_paid_total()
+            messages.success(request, f"Payment added for Bill #{bill.id}")
+            return redirect('bill_detail', bill.id)
+    else:
+        form = PaymentForm(initial={'bill': bill})
+
+    context = {
+        'form': form,
+        'bill': bill,
+    }
+    return render(request, 'inventory/payment_create.html', context)
 
 def bill_list(request):
     bills = Bill.objects.all()
     return render(request, "inventory/bill_list.html", {"bills": bills})
 
-def bill_details(request, pk):
-    bill = get_object_or_404(Bill, pk=pk)
-    return render(request, "inventory/bill_details.html", {"bill": bill})
+
+def bill_detail(request, pk):
+    bill = get_object_or_404(Bill, id=pk)
+    items = bill.items.all()
+    payments = bill.payments.all()
+
+    context = {
+        'bill': bill,
+        'items': items,
+        'payments': payments,
+    }
+    return render(request, "inventory/bill_details.html", context)
 
 def bill_update(request, pk):
     bill = get_object_or_404(Bill, pk=pk)
@@ -201,15 +265,6 @@ def bill_update(request, pk):
         form = BillForm(instance=bill)
     return render(request, "inventory/form.html", {"form": form})
 
-def billitem_create(request):
-    if request.method == "POST":
-        form = BillItemForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("bill_list")
-    else:
-        form = BillItemForm()
-    return render(request, "inventory/form.html", {"form": form})
 
 def billitem_list(request):
     billitems = BillItem.objects.all()
@@ -228,16 +283,6 @@ def billitem_update(request, pk):
             return redirect("bill_list")
     else:
         form = BillItemForm(instance=billitem)
-    return render(request, "inventory/form.html", {"form": form})
-
-def payment_create(request):
-    if request.method == "POST":
-        form = PaymentForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("bill_list")
-    else:
-        form = PaymentForm()
     return render(request, "inventory/form.html", {"form": form})
 
 def payment_list(request):
