@@ -1,21 +1,91 @@
 {% extends "inventory/base.html" %}
 
 {% block content %}
-<div class="container mt-5">
-  <h2>Create Bill</h2>
-  <form method="POST">
-    {% csrf_token %}
-    {{ bill_form.as_p }}
+<div class="min-h-screen bg-gray-50 py-10">
+  <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-2xl p-8">
+    
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">🧾 Create Bill</h2>
 
-    <h4>Bill Items</h4>
-    {{ formset.management_form }}
-    {% for form in formset %}
-      <div class="border p-3 mb-2 rounded">
-        {{ form.as_p }}
+    <form method="POST" class="space-y-6">
+      {% csrf_token %}
+
+      <!-- Bill Form -->
+      <div class="space-y-4">
+        <label for="{{ bill_form.customer.id_for_label }}" class="block text-gray-700 font-semibold">
+          Customer Name
+        </label>
+        {{ bill_form.customer.errors }}
+        {{ bill_form.customer }}
       </div>
-    {% endfor %}
 
-    <button type="submit" class="btn btn-primary">Create Bill</button>
-  </form>
+      <!-- Bill Items -->
+      <h3 class="text-xl font-semibold text-gray-800 mt-8 mb-4">Bill Items</h3>
+      {{ formset.management_form }}
+
+      <div id="formset-container" class="space-y-4">
+        {% for form in formset %}
+          <div class="p-4 border border-gray-200 rounded-xl bg-gray-50 space-y-4 form-row">
+            <div>
+              <label for="{{ form.product.id_for_label }}" class="block text-gray-700 font-semibold">
+                Product
+              </label>
+              {{ form.product.errors }}
+              {{ form.product }}
+            </div>
+
+            <div>
+              <label for="{{ form.quantity.id_for_label }}" class="block text-gray-700 font-semibold">
+                Quantity
+              </label>
+              {{ form.quantity.errors }}
+              {{ form.quantity }}
+            </div>
+
+            <div>
+              <label for="{{ form.price.id_for_label }}" class="block text-gray-700 font-semibold">
+                Price
+              </label>
+              {{ form.price.errors }}
+              {{ form.price }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="text-center">
+        <button type="submit"
+          class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold shadow-md transition-all">
+          Create Bill
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
+
+<!-- AJAX Autofill Script -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('select[id$="-product"]').forEach(select => {
+      select.addEventListener('change', function () {
+        const productId = this.value;
+        const row = this.closest('.form-row');
+        const priceInput = row.querySelector('input[id$="-price"]');
+
+        if (productId) {
+          fetch(`/get-product-details/?product_id=${productId}`)
+            .then(response => response.json())
+            .then(data => {
+              if (data.price) {
+                priceInput.value = data.price;
+              } else {
+                priceInput.value = '';
+              }
+            });
+        } else {
+          priceInput.value = '';
+        }
+      });
+    });
+  });
+</script>
 {% endblock %}

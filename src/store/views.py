@@ -215,6 +215,14 @@ def create_bill(request):
     return render(request, 'inventory/bill_create.html', context)
 
 
+def get_product_price(request, product_id):
+    try:
+        product = Product.objects.get(id=product_id)
+        print("product", product)
+        return JsonResponse({'price': float(product.original_price)})
+    except Product.DoesNotExist:
+        return JsonResponse({'error': 'Product not found'}, status=404)
+
 # ✅ View to create Payment for a Bill
 def create_payment(request, id):
     bill = get_object_or_404(Bill, id=id)

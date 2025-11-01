@@ -57,8 +57,7 @@ class StockTransactionForm(forms.ModelForm):
 class BillForm(forms.ModelForm):
     class Meta:
         model = Bill
-        fields = ['customer']  # Add other fields if you need (like 'user')
-
+        fields = ['customer']  
 
 class BillItemForm(forms.ModelForm):
     class Meta:
