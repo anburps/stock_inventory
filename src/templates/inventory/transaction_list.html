@@ -4,7 +4,7 @@
 {% comment %} <a href="{% url 'transaction_create' %}" class="btn btn-primary mb-2">Add Transaction</a> {% endcomment %}
 <table class="table table-striped">
   <thead>
-    <tr><th>Product</th><th>Type</th><th>Quantity</th><th>Date</th></tr>
+    <tr><th>Product</th><th>Type</th><th>Quantity</th><th>IN</th><th>OUT</th><th>Date</th></tr>
   </thead>
   <tbody>
     {% for tx in transactions %}
@@ -18,6 +18,9 @@
         {% endif %}
       </td>
       <td>{{ tx.quantity }}</td>
+      <td>{{ tx.quantity_stock_in }}</td>
+      <td>{{ tx.quantity_stock_out }}</td>
+
       <td>{{ tx.created_at|date:"Y-m-d H:i" }}</td>
     </tr>
     {% empty %}

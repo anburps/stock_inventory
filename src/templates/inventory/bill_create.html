@@ -33,7 +33,7 @@
               {{ form.product }}
             </div>
 
-            <div>
+            <div>product_id
               <label for="{{ form.quantity.id_for_label }}" class="block text-gray-700 font-semibold">
                 Quantity
               </label>
@@ -48,9 +48,16 @@
               {{ form.price.errors }}
               {{ form.price }}
             </div>
+            <div>
+            <label class="block text-gray-700 font-semibold">Total</label>
+            <input type="text" class="total-field w-full border-gray-300 rounded-md" readonly />
           </div>
+          </div>
+           
         {% endfor %}
       </div>
+         
+
 
       <div class="text-center">
         <button type="submit"
@@ -64,28 +71,53 @@
 
 <!-- AJAX Autofill Script -->
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll('select[id$="-product"]').forEach(select => {
-      select.addEventListener('change', function () {
-        const productId = this.value;
-        const row = this.closest('.form-row');
-        const priceInput = row.querySelector('input[id$="-price"]');
+    document.addEventListener("DOMContentLoaded", function () {
+      // 🔹 When product changes → fetch price
+      document.querySelectorAll('select[id$="-product"]').forEach(select => {
+        select.addEventListener('change', function () {
+          const productId = this.value;
+          const row = this.closest('.form-row');
+          const priceInput = row.querySelector('input[id$="-price"]');
+          const quantityInput = row.querySelector('input[id$="-quantity"]');
+          const totalField = row.querySelector('.total-field');
 
-        if (productId) {
-          fetch(`/get-product-details/?product_id=${productId}`)
-            .then(response => response.json())
-            .then(data => {
-              if (data.price) {
-                priceInput.value = data.price;
-              } else {
-                priceInput.value = '';
-              }
-            });
-        } else {
-          priceInput.value = '';
-        }
+          if (productId) {
+            fetch(`/get-product-details/?product_id=${productId}`)
+              .then(response => response.json())
+              .then(data => {
+                if (data.price) {
+                  priceInput.value = data.price;
+                  // auto-update total if quantity already entered
+                  if (quantityInput.value) {
+                    const total = parseFloat(data.price || 0) * parseFloat(quantityInput.value || 0);
+                    totalField.value = total.toFixed(2);
+                  }
+                } else {
+                  priceInput.value = '';
+                  totalField.value = '';
+                }
+              });
+          } else {
+            priceInput.value = '';
+            totalField.value = '';
+          }
+        });
+      });
+
+      // 🔹 When quantity changes → calculate total
+      document.querySelectorAll('input[id$="-quantity"]').forEach(input => {
+        input.addEventListener('input', function () {
+          const row = this.closest('.form-row');
+          const priceInput = row.querySelector('input[id$="-price"]');
+          const totalField = row.querySelector('.total-field');
+          const price = parseFloat(priceInput.value || 0);
+          const qty = parseFloat(this.value || 0);
+          const total = price * qty;
+
+          totalField.value = total ? total.toFixed(2) : '';
+        });
       });
     });
-  });
 </script>
+
 {% endblock %}

@@ -35,7 +35,7 @@ urlpatterns = [
     path("bills-create/", views.create_bill, name="bill_create"),
     path("bill-detail/<int:pk>/", views.bill_detail, name="bill_detail"),
     path("bills/<int:pk>/update/", views.bill_update, name="bill_update"),
-    path('get-product-price/<int:product_id>/', views.get_product_price, name='get_product_price'),
+    path("get-product-details/", views.get_product_price, name="get_product_price"),
 
     
     # BillItem

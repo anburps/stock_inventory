@@ -75,6 +75,8 @@ class StockTransaction(models.Model):
     product             = models.ForeignKey(Product, related_name='transactions', on_delete=models.CASCADE)
     transaction_type    = models.CharField(max_length=3, choices=TYPE_CHOICES)
     quantity            = models.IntegerField()
+    quantity_stock_out  = models.IntegerField(default=0)
+    quantity_stock_in   = models.IntegerField(default=0)
     note                = models.TextField(blank=True)
     created_at          = models.DateTimeField(auto_now_add=True)
     updated_at          = models.DateTimeField(auto_now=True)
